@@ -17,16 +17,18 @@ public class Bankiersessie extends UnicastRemoteObject implements
 	private long laatsteAanroep;
 	private int reknr;
 	private IBank bank;
+        private boolean isActive;
 
 	public Bankiersessie(int reknr, IBank bank) throws RemoteException {
 		laatsteAanroep = System.currentTimeMillis();
 		this.reknr = reknr;
 		this.bank = bank;
+                this.isActive = true;
 		
 	}
 
 	public boolean isGeldig() {
-		return System.currentTimeMillis() - laatsteAanroep < GELDIGHEIDSDUUR;
+		return System.currentTimeMillis() - laatsteAanroep < GELDIGHEIDSDUUR && isActive;
 	}
 
 	@Override
@@ -64,6 +66,7 @@ public class Bankiersessie extends UnicastRemoteObject implements
 
 	@Override
 	public void logUit() throws RemoteException {
+            this.isActive = false;
 		UnicastRemoteObject.unexportObject(this, true);
 	}
 
