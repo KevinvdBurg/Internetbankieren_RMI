@@ -21,6 +21,7 @@ public class Rekening extends Observable implements IRekeningTbvBank {
      */
     Rekening(int number, IKlant klant, String currency) {
         this(number, klant, new Money(0, currency));
+        this.setChanged();
     }
 
     /**
@@ -37,6 +38,7 @@ public class Rekening extends Observable implements IRekeningTbvBank {
         this.nr = number;
         this.eigenaar = klant;
         this.saldo = saldo;
+        this.setChanged();
     }
 
     public boolean equals(Object obj) {
@@ -61,6 +63,7 @@ public class Rekening extends Observable implements IRekeningTbvBank {
 
     public Money getSaldo() {
         return saldo;
+        
     }
 
     public boolean muteer(Money bedrag) {
@@ -70,6 +73,7 @@ public class Rekening extends Observable implements IRekeningTbvBank {
 
         if (isTransferPossible(bedrag)) {
             saldo = Money.sum(saldo, bedrag);
+            
             return true;
         }
         return false;

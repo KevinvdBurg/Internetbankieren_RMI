@@ -64,13 +64,13 @@ public class BankierSessieController implements Observer, Initializable {
         IRekening rekening = null;
         try {
             rekening = sessie.getRekening();
+            
             Rekening rkg = (Rekening)rekening;
             rkg.addObserver(this);
-            tfAccountNr.setText(rekening.getNr() + "");
-            //tfBalance.setText(rekening.getSaldo() + "");
-            String eigenaar = rekening.getEigenaar().getNaam() + " te "
-                    + rekening.getEigenaar().getPlaats();
-            tfNameCity.setText(eigenaar);
+            
+            this.UpdateGUI(rkg);
+            
+            
         } catch (InvalidSessionException ex) {
             taMessage.setText("bankiersessie is verlopen");
             Logger.getLogger(BankierSessieController.class.getName()).log(Level.SEVERE, null, ex);
@@ -79,13 +79,16 @@ public class BankierSessieController implements Observer, Initializable {
             taMessage.setText("verbinding verbroken");
             Logger.getLogger(BankierSessieController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
+    
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
     }
 
     @FXML
@@ -115,13 +118,21 @@ public class BankierSessieController implements Observer, Initializable {
             e1.printStackTrace();
             taMessage.setText(e1.getMessage());
         }
+        
     }
 
+    public void UpdateGUI(IRekening rekening){
+        
+            tfAccountNr.setText(rekening.getNr() + "");
+            tfBalance.setText(rekening.getSaldo() + "");
+            String eigenaar = rekening.getEigenaar().getNaam() + " te " + rekening.getEigenaar().getPlaats();
+            tfNameCity.setText(eigenaar);
+    }
+    
     @Override
     public void update(Observable o, Object arg)
     {
         IRekening rekening = (IRekening) arg;
-        tfBalance.setText(rekening.getSaldo() + "");
-        
+        UpdateGUI(rekening);
     }
 }
