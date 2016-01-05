@@ -111,6 +111,7 @@ public class BankierSessieController implements Observer, Initializable {
             }
             long centen = (long) (Double.parseDouble(tfAmount.getText()) * 100);
             sessie.maakOver(to, new Money(centen, Money.EURO));
+            taMessage.setText("transfer successful");
         } catch (RemoteException e1) {
             e1.printStackTrace();
             taMessage.setText("verbinding verbroken");

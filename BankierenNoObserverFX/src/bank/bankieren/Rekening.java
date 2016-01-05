@@ -20,7 +20,7 @@ public class Rekening extends Observable implements IRekeningTbvBank {
      * @param currency de munteenheid waarin het saldo is uitgedrukt
      */
     Rekening(int number, IKlant klant, String currency) {
-        this(number, klant, new Money(0, currency));
+        this(number, klant, new Money(20, currency));
         this.setChanged();
     }
 
@@ -37,8 +37,9 @@ public class Rekening extends Observable implements IRekeningTbvBank {
     Rekening(int number, IKlant klant, Money saldo) {
         this.nr = number;
         this.eigenaar = klant;
-        this.saldo = saldo;
-        this.setChanged();
+        this.saldo = new Money(20, Money.EURO);
+        
+        
     }
 
     public boolean equals(Object obj) {
@@ -63,7 +64,6 @@ public class Rekening extends Observable implements IRekeningTbvBank {
 
     public Money getSaldo() {
         return saldo;
-        
     }
 
     public boolean muteer(Money bedrag) {
@@ -74,6 +74,8 @@ public class Rekening extends Observable implements IRekeningTbvBank {
         if (isTransferPossible(bedrag)) {
             saldo = Money.sum(saldo, bedrag);
             
+            this.setChanged();
+            this.notifyObservers(this);
             return true;
         }
         return false;
