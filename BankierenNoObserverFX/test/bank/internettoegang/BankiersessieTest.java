@@ -84,7 +84,7 @@ public class BankiersessieTest {
         try {
             instance = new Bankiersessie(100, bank);
             expResult = false;
-            sleep(600000);
+            sleep(IBankiersessie.GELDIGHEIDSDUUR);
             result = instance.isGeldig();
             assertEquals(expResult, result);
         } catch (RemoteException ex) {
@@ -209,7 +209,7 @@ public class BankiersessieTest {
         try
         {
             instance = new Bankiersessie(100000000, bank);
-            sleep(600000);
+            sleep(IBankiersessie.GELDIGHEIDSDUUR);
             expResult = null;
             result = instance.getRekening();
             fail("can't get account when no session");
