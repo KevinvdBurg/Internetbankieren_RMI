@@ -2,17 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/Users/kvdb/Documents/Codes/Internetbankieren_RMI/BankierenNoObserverFX/src/bank/gui/BankierClient.java</file>
-            <file>file:/Users/kvdb/Documents/Codes/Internetbankieren_RMI/BankierenNoObserverFX/src/bank/gui/LoginController.java</file>
-            <file>file:/Users/kvdb/Documents/Codes/Internetbankieren_RMI/BankierenNoObserverFX/src/bank/bankieren/Rekening.java</file>
-            <file>file:/Users/kvdb/Documents/Codes/Internetbankieren_RMI/BankierenNoObserverFX/src/bank/gui/BankSelectController.java</file>
-            <file>file:/Users/kvdb/Documents/Codes/Internetbankieren_RMI/BankierenNoObserverFX/src/bank/bankieren/Bank.java</file>
-            <file>file:/Users/kvdb/Documents/Codes/Internetbankieren_RMI/BankierenNoObserverFX/src/bank/server/BalieServer.java</file>
-            <file>file:/Users/kvdb/Documents/Codes/Internetbankieren_RMI/BankierenNoObserverFX/src/bank/gui/BankierSessieController.java</file>
-            <file>file:/Users/kvdb/Documents/Codes/Internetbankieren_RMI/BankierenNoObserverFX/src/bank/bankieren/IBank.java</file>
-            <file>file:/Users/kvdb/Documents/Codes/Internetbankieren_RMI/BankierenNoObserverFX/src/bank/internettoegang/IBankiersessie.java</file>
-            <file>file:/Users/kvdb/Documents/Codes/Internetbankieren_RMI/BankierenNoObserverFX/src/bank/internettoegang/Bankiersessie.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

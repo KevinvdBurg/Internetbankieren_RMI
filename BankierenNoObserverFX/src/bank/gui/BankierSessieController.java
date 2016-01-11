@@ -10,8 +10,10 @@ import bank.bankieren.Rekening;
 import bank.bankieren.Money;
 import bank.internettoegang.IBalie;
 import bank.internettoegang.IBankiersessie;
+import bank.server.RemotePropertyListener;
 import fontys.util.InvalidSessionException;
 import fontys.util.NumberDoesntExistException;
+import java.beans.PropertyChangeEvent;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Observable;
@@ -32,7 +34,7 @@ import javafx.scene.control.TextField;
  *
  * @author frankcoenen
  */
-public class BankierSessieController implements Observer, Initializable {
+public class BankierSessieController implements Observer, Initializable, RemotePropertyListener {
 
     @FXML
     private Hyperlink hlLogout;
@@ -69,7 +71,7 @@ public class BankierSessieController implements Observer, Initializable {
             rkg.addObserver(this);
             
             this.UpdateGUI(rkg);
-            
+            sessie.addListener(this, "bedrag");
             
         } catch (InvalidSessionException ex) {
             taMessage.setText("bankiersessie is verlopen");
@@ -136,4 +138,10 @@ public class BankierSessieController implements Observer, Initializable {
         IRekening rekening = (IRekening) arg;
         UpdateGUI(rekening);
     }
+    
+    @Override
+        public void propertyChange(PropertyChangeEvent evt) throws RemoteException
+        {
+            System.out.println("HIERO");
+        }
 }

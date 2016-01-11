@@ -4,9 +4,14 @@ import java.rmi.*;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import bank.bankieren.*;
+import bank.server.BasicPublisher;
+import bank.server.RemotePropertyListener;
+import bank.server.RemotePublisher;
+import java.beans.PropertyChangeEvent;
 
-public class Balie extends UnicastRemoteObject implements IBalie {
+public class Balie extends UnicastRemoteObject implements IBalie{
 
+        
 	private static final long serialVersionUID = -4194975069137290780L;
 	private IBank bank;
 	private HashMap<String, ILoginAccount> loginaccounts;
@@ -15,6 +20,7 @@ public class Balie extends UnicastRemoteObject implements IBalie {
 
 	public Balie(IBank bank) throws RemoteException {
 		this.bank = bank;
+               
 		loginaccounts = new HashMap<String, ILoginAccount>();
 		//sessions = new HashSet<IBankiersessie>();
 		random = new Random();
