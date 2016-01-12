@@ -1,13 +1,16 @@
 package bank.bankieren;
 
+import bank.server.BasicPublisher;
+import bank.server.RemotePropertyListener;
 import fontys.util.*;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Bank implements IBank
+public class Bank extends UnicastRemoteObject implements IBank
 {
 
     /**
@@ -18,13 +21,15 @@ public class Bank implements IBank
     private Collection<IKlant> clients;
     private int nieuwReknr;
     private String name;
+    private BasicPublisher bp;
 
-    public Bank(String name)
+    public Bank(String name) throws RemoteException
     {
         accounts = new HashMap<Integer, IRekeningTbvBank>();
         clients = new ArrayList<IKlant>();
         nieuwReknr = 100000000;
         this.name = name;
+        this.bp = new BasicPublisher(new String[]{"overgemaakt"});
     }
 
     public synchronized int openRekening(String name, String city)
@@ -100,6 +105,8 @@ public class Bank implements IBank
         {
             source_account.muteer(money);
         }
+        
+        bp.inform(this, "overgemaakt", null, money);
         return success;
     }
 
@@ -107,6 +114,16 @@ public class Bank implements IBank
     public String getName()
     {
         return name;
+    }
+
+    @Override
+    public void addListener(RemotePropertyListener listener, String property) throws RemoteException {
+            bp.addListener(listener, property);
+    }
+
+    @Override
+    public void removeListener(RemotePropertyListener listener, String property) throws RemoteException {
+            bp.removeListener(listener, property);
     }
 
 }

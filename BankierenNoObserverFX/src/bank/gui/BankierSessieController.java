@@ -15,12 +15,15 @@ import fontys.util.InvalidSessionException;
 import fontys.util.NumberDoesntExistException;
 import java.beans.PropertyChangeEvent;
 import java.net.URL;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -34,7 +37,7 @@ import javafx.scene.control.TextField;
  *
  * @author frankcoenen
  */
-public class BankierSessieController implements Observer, Initializable, RemotePropertyListener {
+public class BankierSessieController extends UnicastRemoteObject implements Observer, Initializable, RemotePropertyListener {
 
     @FXML
     private Hyperlink hlLogout;
@@ -59,7 +62,9 @@ public class BankierSessieController implements Observer, Initializable, RemoteP
     private IBalie balie;
     private IBankiersessie sessie;
 
-    public void setApp(BankierClient application, IBalie balie, IBankiersessie sessie) {
+    public BankierSessieController() throws RemoteException{}
+    
+    public void setApp(BankierClient application, IBalie balie, IBankiersessie sessie) throws RemoteException {
         this.balie = balie;
         this.sessie = sessie;
         this.application = application;
@@ -71,7 +76,6 @@ public class BankierSessieController implements Observer, Initializable, RemoteP
             rkg.addObserver(this);
             
             this.UpdateGUI(rkg);
-            sessie.addListener(this, "bedrag");
             
         } catch (InvalidSessionException ex) {
             taMessage.setText("bankiersessie is verlopen");
@@ -81,7 +85,7 @@ public class BankierSessieController implements Observer, Initializable, RemoteP
             taMessage.setText("verbinding verbroken");
             Logger.getLogger(BankierSessieController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        sessie.addListener(this, "overgemaakt");
     }
     
 
@@ -126,10 +130,14 @@ public class BankierSessieController implements Observer, Initializable, RemoteP
 
     public void UpdateGUI(IRekening rekening){
         
-            tfAccountNr.setText(rekening.getNr() + "");
-            tfBalance.setText(rekening.getSaldo() + "");
-            String eigenaar = rekening.getEigenaar().getNaam() + " te " + rekening.getEigenaar().getPlaats();
-            tfNameCity.setText(eigenaar);
+        Platform.runLater(new Runnable() {
+            @Override public void run() {
+                tfAccountNr.setText(rekening.getNr() + "");
+                tfBalance.setText(rekening.getSaldo() + "");
+                String eigenaar = rekening.getEigenaar().getNaam() + " te " + rekening.getEigenaar().getPlaats();
+                tfNameCity.setText(eigenaar);
+            }
+        });
     }
     
     @Override
@@ -138,10 +146,13 @@ public class BankierSessieController implements Observer, Initializable, RemoteP
         IRekening rekening = (IRekening) arg;
         UpdateGUI(rekening);
     }
-    
+
     @Override
-        public void propertyChange(PropertyChangeEvent evt) throws RemoteException
-        {
-            System.out.println("HIERO");
+    public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
+        try {
+            UpdateGUI(sessie.getRekening());
+        } catch (InvalidSessionException ex) {
+            Logger.getLogger(BankierSessieController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
 }
