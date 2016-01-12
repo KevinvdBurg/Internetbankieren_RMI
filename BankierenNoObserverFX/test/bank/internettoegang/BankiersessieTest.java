@@ -50,7 +50,7 @@ public class BankiersessieTest {
      * Test of isGeldig method, of class Bankiersessie.
      */
     @Test
-    public void testIsGeldig() throws InterruptedException {
+    public void testIsGeldig() throws InterruptedException, RemoteException {
         Bankiersessie instance;
         Bank bank = new Bank("Icebank");
         boolean expResult;
@@ -96,7 +96,7 @@ public class BankiersessieTest {
      * Test of maakOver method, of class Bankiersessie.
      */
     @Test
-    public void testMaakOver() throws Exception {
+    public void testMaakOver() throws RemoteException, NumberDoesntExistException, InvalidSessionException {
         Bank bank = new Bank("Icebank");
         bank.openRekening("Harry", "Tilly");
         bank.openRekening("Kara", "Tilly");
@@ -224,7 +224,7 @@ public class BankiersessieTest {
      * Test of logUit method, of class Bankiersessie.
      */
     @Test
-    public void testLogUit() throws Exception {
+    public void testLogUit() throws RemoteException {
         Bank bank = new Bank("Icebank");
         
         System.out.println("logUit");
