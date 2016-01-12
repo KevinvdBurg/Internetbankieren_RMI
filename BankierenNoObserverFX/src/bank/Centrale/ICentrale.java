@@ -6,6 +6,7 @@
 
 package bank.Centrale;
 
+import bank.bankieren.Money;
 import bank.server.RemotePublisher;
 
 /**
@@ -14,6 +15,23 @@ import bank.server.RemotePublisher;
  */
 public interface ICentrale extends RemotePublisher{
     
-    public boolean maakOver();
+    /**
+     * 
+     * Maakt een specifiek bedrag over van het ene rekeingsnummer naar de andere.
+     * 
+     * 
+     * @param to Het rekenings nummer waar het bedrag heen moet.
+     * @param from het rekenings nummer van welk het bedrag komt
+     * @param amount het bedrag dat wordt overgemaakt tussen de rekeningnummers
+     * @return returned true als het geld goed is overgemaakt en false als dit niet is gelukt.
+     */
+    public boolean transferMoney(int to, int from, Money amount);
+    
+    /**
+     * 
+     * Reserveerd de overlegende vrije account nummer.
+     * 
+     * @return een vrije account nummer.
+     */
     public int reserveAccountNumber();
 }

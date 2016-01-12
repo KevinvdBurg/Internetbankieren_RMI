@@ -6,6 +6,7 @@
 
 package bank.Centrale;
 
+import bank.bankieren.Money;
 import bank.server.RemotePropertyListener;
 import java.rmi.RemoteException;
 
@@ -16,16 +17,17 @@ import java.rmi.RemoteException;
 public class Centrale implements ICentrale{
 
     @Override
-    public boolean maakOver()
+    public boolean transferMoney(int to, int from, Money amount)
+    {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public int reserveAccountNumber()
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public int getNextAccountNumber()
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public void addListener(RemotePropertyListener listener, String property) throws RemoteException
@@ -38,6 +40,9 @@ public class Centrale implements ICentrale{
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+
+
 
 }
 
