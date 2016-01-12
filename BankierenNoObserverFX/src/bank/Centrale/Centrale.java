@@ -6,15 +6,26 @@
 
 package bank.Centrale;
 
+import bank.bankieren.Bank;
 import bank.bankieren.Money;
 import bank.server.RemotePropertyListener;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author Kevin van der Burg <kevin.vanderburg@student.fontys.nl> 
  */
 public class Centrale implements ICentrale{
+
+    
+    private List<Bank> banken;
+    
+    public Centrale()
+    {
+        this.banken = new ArrayList<>();
+    }
 
     @Override
     public boolean transferMoney(int to, int from, Money amount)
