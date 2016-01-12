@@ -40,6 +40,8 @@ public class Bank extends UnicastRemoteObject implements IBank
             }
 
             IKlant klant = getKlant(name, city);
+            
+            //Haal uit de centrale welke rekeningeNR er over is.
             IRekeningTbvBank account = new Rekening(nieuwReknr, klant, Money.EURO);
             accounts.put(nieuwReknr, account);
             nieuwReknr++;
