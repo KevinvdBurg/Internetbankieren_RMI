@@ -5,6 +5,7 @@
  */
 package bank.bankieren;
 
+import java.rmi.RemoteException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -41,7 +42,7 @@ public class BankTest {
      * Test of openRekening method, of class Bank.
      */
     @org.junit.Test
-    public void testOpenRekening() {
+    public void testOpenRekening() throws RemoteException {
         String name;
         String city;
         int expResult;
@@ -89,7 +90,7 @@ public class BankTest {
      * Test of getRekening method, of class Bank.
      */
     @org.junit.Test
-    public void testGetRekening() {
+    public void testGetRekening() throws RemoteException {
         Bank instance = new Bank("Rabobank");
         instance.openRekening("John", "Meerdijk");
         int nr;
@@ -178,7 +179,7 @@ public class BankTest {
      * Test of getName method, of class Bank.
      */
     @org.junit.Test
-    public void testGetName() {
+    public void testGetName() throws RemoteException {
         Bank instance = new Bank("Rabobank");
         String expResult;
         String result;
