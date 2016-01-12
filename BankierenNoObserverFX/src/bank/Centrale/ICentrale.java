@@ -6,6 +6,7 @@
 
 package bank.Centrale;
 
+import bank.bankieren.IBank;
 import bank.bankieren.Money;
 import bank.server.RemotePublisher;
 
@@ -34,4 +35,6 @@ public interface ICentrale extends RemotePublisher{
      * @return een vrije account nummer.
      */
     public int reserveAccountNumber();
+    
+    public boolean addBank(IBank bank);
 }

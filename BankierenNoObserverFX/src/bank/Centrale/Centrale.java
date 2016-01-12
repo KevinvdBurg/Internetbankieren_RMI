@@ -7,6 +7,7 @@
 package bank.Centrale;
 
 import bank.bankieren.Bank;
+import bank.bankieren.IBank;
 import bank.bankieren.Money;
 import bank.server.RemotePropertyListener;
 import java.rmi.RemoteException;
@@ -25,6 +26,8 @@ public class Centrale implements ICentrale{
     public Centrale()
     {
         this.banken = new ArrayList<>();
+        
+        
     }
 
     @Override
@@ -52,7 +55,20 @@ public class Centrale implements ICentrale{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-
+    @Override
+    public boolean addBank(IBank bank)
+    {
+        try
+        {
+            banken.add((Bank) bank);
+            return true;
+        } catch (Exception e)
+        {
+            System.err.println(e.toString());
+        }
+        
+        return false;
+    }
 
 
 }
