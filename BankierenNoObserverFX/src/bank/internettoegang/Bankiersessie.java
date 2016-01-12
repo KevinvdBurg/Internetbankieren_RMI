@@ -78,8 +78,8 @@ public class Bankiersessie extends UnicastRemoteObject implements IBankiersessie
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
-        System.out.println("InformedSession");
-        bp.inform(this, "overgemaakt", null, null);
+        if(this.isGeldig())
+            bp.inform(this, "overgemaakt", null, null);
     }
 
     @Override
