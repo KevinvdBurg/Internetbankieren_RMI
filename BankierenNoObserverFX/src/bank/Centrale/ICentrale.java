@@ -8,6 +8,7 @@ package bank.Centrale;
 
 import bank.bankieren.IBank;
 import bank.bankieren.Money;
+import bank.server.RemotePropertyListener;
 import bank.server.RemotePublisher;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -16,7 +17,7 @@ import java.rmi.RemoteException;
  *
  * @author Kevin van der Burg <kevin.vanderburg@student.fontys.nl> 
  */
-public interface ICentrale extends RemotePublisher, Remote{
+public interface ICentrale extends Remote, RemotePropertyListener, RemotePublisher{
     
     /**
      * 
@@ -38,5 +39,5 @@ public interface ICentrale extends RemotePublisher, Remote{
      */
     int reserveAccountNumber() throws RemoteException;
     
-    boolean addBank(IBank bank) throws RemoteException;
+    IBank addBank(IBank bank) throws RemoteException;
 }

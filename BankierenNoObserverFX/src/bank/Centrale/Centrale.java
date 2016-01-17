@@ -12,7 +12,9 @@ import bank.bankieren.Money;
 import bank.internettoegang.Balie;
 import bank.internettoegang.IBalie;
 import bank.server.BalieServer;
+import bank.server.BasicPublisher;
 import bank.server.RemotePropertyListener;
+import java.beans.PropertyChangeEvent;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.rmi.Naming;
@@ -31,14 +33,16 @@ import java.util.logging.Logger;
 public class Centrale extends UnicastRemoteObject implements ICentrale{
 
     
-    private List<Bank> banken;
+    private List<IBank> banken;
     private int accountNumber;
+    private BasicPublisher bp;
     
     public Centrale() throws RemoteException
     {
         this.accountNumber = 100000000;
         this.banken = new ArrayList<>();
         startCentrale();
+        this.bp = new BasicPublisher(new String[]{"overgemaakt"});
     }
     
 
@@ -77,28 +81,29 @@ public class Centrale extends UnicastRemoteObject implements ICentrale{
     @Override
     public void addListener(RemotePropertyListener listener, String property) throws RemoteException
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        bp.addListener(listener, property);
     }
 
     @Override
     public void removeListener(RemotePropertyListener listener, String property) throws RemoteException
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        bp.removeListener(listener, property);
     }
 
     @Override
-    public boolean addBank(IBank bank)
+    public IBank addBank(IBank bank)
     {
         try
         {
-            banken.add((Bank) bank);
-            return true;
+            banken.add(bank);
+            bank.addListener(this, "overgemaakt");
+            return bank;
         } catch (Exception e)
         {
             System.err.println(e.toString());
         }
         
-        return false;
+        return null;
     }
 
 
@@ -107,6 +112,12 @@ public class Centrale extends UnicastRemoteObject implements ICentrale{
      */
     public static void main(String[] args) throws RemoteException {
         new Centrale();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
+        System.out.println("Centrale informed");
+        bp.inform(this, "overgemaakt", null, null);
     }
 
 }

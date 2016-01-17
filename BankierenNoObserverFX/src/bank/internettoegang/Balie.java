@@ -22,13 +22,13 @@ public class Balie extends UnicastRemoteObject implements IBalie, RemoteProperty
 	private java.util.Random random;
 
 	public Balie(IBank bank) throws RemoteException {
-		this.bank = bank;
+                this.centrale = connectToServer();
+		this.bank = this.centrale.addBank(bank);
                
 		loginaccounts = new HashMap<String, ILoginAccount>();
 		//sessions = new HashSet<IBankiersessie>();
 		random = new Random();
                 
-                this.centrale = connectToServer();
 	} 
         
         protected ICentrale connectToServer() {
@@ -36,6 +36,7 @@ public class Balie extends UnicastRemoteObject implements IBalie, RemoteProperty
 
                 ICentrale centrale = (ICentrale) Naming.lookup("rmi://127.0.0.1:1098/centrale");
                 int number = centrale.reserveAccountNumber();
+                centrale.addListener(this, "overgemaakt");
                 return centrale;
 
             } catch (Exception exc) {
@@ -74,7 +75,7 @@ public class Balie extends UnicastRemoteObject implements IBalie, RemoteProperty
 		if (loginaccount.checkWachtwoord(wachtwoord)) {
 			IBankiersessie sessie = new Bankiersessie(loginaccount
 					.getReknr(), bank);
-			
+			this.centrale.addListener(sessie, "overgemaakt");
 		 	return sessie;
 		}
 		else return null;
@@ -93,7 +94,7 @@ public class Balie extends UnicastRemoteObject implements IBalie, RemoteProperty
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
 
