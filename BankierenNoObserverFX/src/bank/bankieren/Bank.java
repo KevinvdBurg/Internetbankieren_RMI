@@ -19,7 +19,6 @@ public class Bank extends UnicastRemoteObject implements IBank
     private static final long serialVersionUID = -8728841131739353765L;
     private Map<Integer, IRekeningTbvBank> accounts;
     private Collection<IKlant> clients;
-    private int nieuwReknr;
     private String name;
     private BasicPublisher bp;
 
@@ -27,12 +26,11 @@ public class Bank extends UnicastRemoteObject implements IBank
     {
         accounts = new HashMap<Integer, IRekeningTbvBank>();
         clients = new ArrayList<IKlant>();
-        nieuwReknr = 100000000;
         this.name = name;
         this.bp = new BasicPublisher(new String[]{"overgemaakt"});
     }
 
-    public synchronized int openRekening(String name, String city)
+    public synchronized int openRekening(int nieuwReknr, String name, String city)
     {
             if (name.equals("") || city.equals(""))
             {

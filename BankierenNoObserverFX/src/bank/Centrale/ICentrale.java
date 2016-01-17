@@ -9,12 +9,14 @@ package bank.Centrale;
 import bank.bankieren.IBank;
 import bank.bankieren.Money;
 import bank.server.RemotePublisher;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
  *
  * @author Kevin van der Burg <kevin.vanderburg@student.fontys.nl> 
  */
-public interface ICentrale extends RemotePublisher{
+public interface ICentrale extends RemotePublisher, Remote{
     
     /**
      * 
@@ -26,7 +28,7 @@ public interface ICentrale extends RemotePublisher{
      * @param amount het bedrag dat wordt overgemaakt tussen de rekeningnummers
      * @return returned true als het geld goed is overgemaakt en false als dit niet is gelukt.
      */
-    public boolean transferMoney(int to, int from, Money amount);
+    boolean transferMoney(int to, int from, Money amount) throws RemoteException;
     
     /**
      * 
@@ -34,7 +36,7 @@ public interface ICentrale extends RemotePublisher{
      * 
      * @return een vrije account nummer.
      */
-    public int reserveAccountNumber();
+    int reserveAccountNumber() throws RemoteException;
     
-    public boolean addBank(IBank bank);
+    boolean addBank(IBank bank) throws RemoteException;
 }

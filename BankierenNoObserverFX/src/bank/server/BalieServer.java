@@ -65,7 +65,14 @@ public class BalieServer extends Application {
                 out = new FileOutputStream(nameBank + ".props");
                 props.store(out, null);
                 out.close();
-                java.rmi.registry.LocateRegistry.createRegistry(port);
+                try
+                {
+                    java.rmi.registry.LocateRegistry.createRegistry(port);
+                }
+                catch(Exception e)
+                {
+                   System.out.println("Registry already in use.");
+                }
                 IBalie balie = new Balie(new Bank(nameBank));
                 Naming.rebind(nameBank, balie);
                

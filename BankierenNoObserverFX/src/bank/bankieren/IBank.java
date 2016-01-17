@@ -23,7 +23,7 @@ public interface IBank extends RemotePublisher, Remote {
      * @return -1 zodra naam of plaats een lege string en anders het nummer van de
      *         gecreeerde bankrekening
      */
-    int openRekening(String naam, String plaats) throws RemoteException;
+    int openRekening(int nieuwReknr, String naam, String plaats) throws RemoteException;
 
     /**
      * er wordt bedrag overgemaakt van de bankrekening met nummer bron naar de

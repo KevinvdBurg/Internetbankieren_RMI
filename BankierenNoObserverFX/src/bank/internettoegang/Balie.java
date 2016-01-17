@@ -1,5 +1,6 @@
 package bank.internettoegang;
 
+import bank.Centrale.ICentrale;
 import java.rmi.*;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
@@ -8,12 +9,14 @@ import bank.server.BasicPublisher;
 import bank.server.RemotePropertyListener;
 import bank.server.RemotePublisher;
 import java.beans.PropertyChangeEvent;
+import java.io.FileInputStream;
 
-public class Balie extends UnicastRemoteObject implements IBalie{
+public class Balie extends UnicastRemoteObject implements IBalie, RemotePropertyListener{
 
         
 	private static final long serialVersionUID = -4194975069137290780L;
 	private IBank bank;
+        private ICentrale centrale;
 	private HashMap<String, ILoginAccount> loginaccounts;
 	//private Collection<IBankiersessie> sessions;
 	private java.util.Random random;
@@ -24,7 +27,22 @@ public class Balie extends UnicastRemoteObject implements IBalie{
 		loginaccounts = new HashMap<String, ILoginAccount>();
 		//sessions = new HashSet<IBankiersessie>();
 		random = new Random();
-	}
+                
+                this.centrale = connectToServer();
+	} 
+        
+        protected ICentrale connectToServer() {
+            try {
+
+                ICentrale centrale = (ICentrale) Naming.lookup("rmi://127.0.0.1:1098/centrale");
+                int number = centrale.reserveAccountNumber();
+                return centrale;
+
+            } catch (Exception exc) {
+                exc.printStackTrace();
+                return null;
+            }
+    }
 
 	public String openRekening(String naam, String plaats, String wachtwoord) throws RemoteException {
 		if (naam.equals(""))
@@ -35,7 +53,7 @@ public class Balie extends UnicastRemoteObject implements IBalie{
 		if (wachtwoord.length() < 4 || wachtwoord.length() > 8)
 			return null;
 
-		int nr = bank.openRekening(naam, plaats);
+		int nr = bank.openRekening(centrale.reserveAccountNumber(), naam, plaats);
 		if (nr == -1)
 			return null;
 
@@ -72,6 +90,11 @@ public class Balie extends UnicastRemoteObject implements IBalie{
 		}
 		return s.toString();
 	}
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 
 }
