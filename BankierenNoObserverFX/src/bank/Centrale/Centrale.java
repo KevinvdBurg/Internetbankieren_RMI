@@ -8,7 +8,9 @@ package bank.Centrale;
 
 import bank.bankieren.Bank;
 import bank.bankieren.IBank;
+import bank.bankieren.IRekeningTbvBank;
 import bank.bankieren.Money;
+import bank.bankieren.Rekening;
 import bank.internettoegang.Balie;
 import bank.internettoegang.IBalie;
 import bank.server.BalieServer;
@@ -64,11 +66,46 @@ public class Centrale extends UnicastRemoteObject implements ICentrale{
             return false;
     }
 
+
     @Override
     public boolean transferMoney(int to, int from, Money amount)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try
+        {
+            IRekeningTbvBank rekFrom = null;
+            IRekeningTbvBank rekTo =  null;
+            for (IBank bank : banken)
+            {
+                IRekeningTbvBank rt = (IRekeningTbvBank)bank.getRekening(to);
+                if (rt != null)
+                {
+                    rekTo = rt;
+                }
+
+                IRekeningTbvBank rf = (IRekeningTbvBank)bank.getRekening(from);
+                if (rt != null)
+                {
+                    rekFrom = rf;
+                }
+            }
+        
+        
+            Money negative = Money.difference(new Money(0, amount.getCurrency()), amount);
+        
+            boolean mf = rekFrom.muteer(negative);
+            boolean mt = rekTo.muteer(amount);
+            
+            bp.inform(this, "overgemaakt", null, amount);
+            return true;
+            
+        } catch (Exception e)
+        {
+            System.err.println(e.toString());
+        }
+        
+        return false;
     }
+    
     
     @Override
     public int reserveAccountNumber()
@@ -79,7 +116,7 @@ public class Centrale extends UnicastRemoteObject implements ICentrale{
 
 
     @Override
-    public void addListener(RemotePropertyListener listener, String property) throws RemoteException
+    public void addListener(RemotePropertyListener listener, String property) throws RemoteException    
     {
         bp.addListener(listener, property);
     }

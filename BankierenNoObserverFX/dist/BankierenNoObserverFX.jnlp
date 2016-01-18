@@ -8,8 +8,8 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="BankierenNoObserverFX.jar" size="48435" download="eager" />
-    <jar href="lib\junit-4.10.jar" size="281015" download="eager" />
+    <jar href="BankierenNoObserverFX.jar" size="49138" download="eager" />
+    <jar href="lib/junit-4.12.jar" size="343814" download="eager" />
   </resources>
 <security>
   <all-permissions/>

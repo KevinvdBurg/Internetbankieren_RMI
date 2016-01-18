@@ -1,5 +1,7 @@
 package bank.internettoegang;
 
+import bank.Centrale.Centrale;
+import bank.Centrale.ICentrale;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -21,12 +23,15 @@ public class Bankiersessie extends UnicastRemoteObject implements IBankiersessie
 	private IBank bank;
         private boolean isActive;
         private BasicPublisher bp;
+        private Balie balie;
 
-	public Bankiersessie(int reknr, IBank bank) throws RemoteException {
+	public Bankiersessie(int reknr, IBank bank, Balie balie) throws RemoteException {
 		laatsteAanroep = System.currentTimeMillis();
 		this.reknr = reknr;
 		this.bank = bank;
                 this.isActive = true;
+                this.balie = balie;
+                balie.addListener(this, "overgemaakt");
                 this.bp = new BasicPublisher(new String[]{"overgemaakt"});
                 bank.addListener(this, "overgemaakt");
 	}
@@ -48,8 +53,9 @@ public class Bankiersessie extends UnicastRemoteObject implements IBankiersessie
 		if (!bedrag.isPositive())
 			throw new RuntimeException("amount must be positive");
 		
-                
-		boolean suc = bank.maakOver(reknr, bestemming, bedrag);
+                ICentrale centrale = balie.getCentrale();
+                boolean suc = centrale.transferMoney(reknr, bestemming, bedrag);
+		//boolean suc = bank.maakOver(reknr, bestemming, bedrag);
                 return suc;
 	}
 

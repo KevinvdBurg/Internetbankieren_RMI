@@ -9,14 +9,14 @@ import bank.server.BasicPublisher;
 import bank.server.RemotePropertyListener;
 import bank.server.RemotePublisher;
 import java.beans.PropertyChangeEvent;
-import java.io.FileInputStream;
 
-public class Balie extends UnicastRemoteObject implements IBalie, RemotePropertyListener{
+public class Balie extends UnicastRemoteObject implements IBalie, RemotePropertyListener, RemotePublisher{
 
         
 	private static final long serialVersionUID = -4194975069137290780L;
 	private IBank bank;
         private ICentrale centrale;
+        private BasicPublisher bp;
 	private HashMap<String, ILoginAccount> loginaccounts;
 	//private Collection<IBankiersessie> sessions;
 	private java.util.Random random;
@@ -24,7 +24,7 @@ public class Balie extends UnicastRemoteObject implements IBalie, RemoteProperty
 	public Balie(IBank bank) throws RemoteException {
                 this.centrale = connectToServer();
 		this.bank = this.centrale.addBank(bank);
-               
+                this.bp = new BasicPublisher(new String[]{"overgemaakt"});
 		loginaccounts = new HashMap<String, ILoginAccount>();
 		//sessions = new HashSet<IBankiersessie>();
 		random = new Random();
@@ -74,7 +74,7 @@ public class Balie extends UnicastRemoteObject implements IBalie, RemoteProperty
 			return null;
 		if (loginaccount.checkWachtwoord(wachtwoord)) {
 			IBankiersessie sessie = new Bankiersessie(loginaccount
-					.getReknr(), bank);
+					.getReknr(), bank, this);
 			this.centrale.addListener(sessie, "overgemaakt");
 		 	return sessie;
 		}
@@ -92,9 +92,27 @@ public class Balie extends UnicastRemoteObject implements IBalie, RemoteProperty
 		return s.toString();
 	}
 
+        public ICentrale getCentrale()
+        {
+            return centrale;
+        }
+        
+        
     @Override
     public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
-        
+        bp.inform(this, "overgemaakt", null, null);
+    }
+
+    @Override
+    public void addListener(RemotePropertyListener listener, String property) throws RemoteException
+    {
+        bp.addListener(listener, property);
+    }
+
+    @Override
+    public void removeListener(RemotePropertyListener listener, String property) throws RemoteException
+    {
+        bp.addListener(listener, property);
     }
 
 
