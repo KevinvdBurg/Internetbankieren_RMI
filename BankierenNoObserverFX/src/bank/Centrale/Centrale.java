@@ -68,32 +68,23 @@ public class Centrale extends UnicastRemoteObject implements ICentrale{
 
 
     @Override
-    public boolean transferMoney(int to, int from, Money amount)
+    public boolean transferMoney(int from, int to, Money amount)
     {
         try
         {
-            IRekeningTbvBank rekFrom = null;
-            IRekeningTbvBank rekTo =  null;
+            Money negative = Money.difference(new Money(0, amount.getCurrency()), amount);
             for (IBank bank : banken)
             {
-                IRekeningTbvBank rt = (IRekeningTbvBank)bank.getRekening(to);
-                if (rt != null)
+                if (bank.getRekening(from) != null)
                 {
-                    rekTo = rt;
+                    bank.maakOver(from, negative);
                 }
-
-                IRekeningTbvBank rf = (IRekeningTbvBank)bank.getRekening(from);
-                if (rt != null)
+                if (bank.getRekening(to) != null)
                 {
-                    rekFrom = rf;
+                    bank.maakOver(to, amount);
                 }
+                
             }
-        
-        
-            Money negative = Money.difference(new Money(0, amount.getCurrency()), amount);
-        
-            boolean mf = rekFrom.muteer(negative);
-            boolean mt = rekTo.muteer(amount);
             
             bp.inform(this, "overgemaakt", null, amount);
             return true;

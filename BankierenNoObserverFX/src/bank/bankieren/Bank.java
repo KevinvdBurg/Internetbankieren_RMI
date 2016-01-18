@@ -67,44 +67,16 @@ public class Bank extends UnicastRemoteObject implements IBank
         return accounts.get(nr);
     }
 
-    public synchronized boolean maakOver(int source, int destination, Money money) throws NumberDoesntExistException
+    public synchronized boolean maakOver(int rekeningnr, Money money) throws NumberDoesntExistException
     {
         
-        if (source == destination)
+        IRekeningTbvBank rek_account = (IRekeningTbvBank) getRekening(rekeningnr);
+        if (rek_account == null)
         {
-            throw new RuntimeException("cannot transfer money to your own account");
-        }
-        if (!money.isPositive())
-        {
-            throw new RuntimeException("money must be positive");
-        }
-
-        IRekeningTbvBank source_account = (IRekeningTbvBank) getRekening(source);
-        if (source_account == null)
-        {
-            throw new NumberDoesntExistException("account " + source
+            throw new NumberDoesntExistException("account " + rekeningnr
                     + " unknown at " + name);
         }
-
-        Money negative = Money.difference(new Money(0, money.getCurrency()), money);
-        boolean success = source_account.muteer(negative);
-        if (!success)
-        {
-            return false;
-        }
-
-        IRekeningTbvBank dest_account = (IRekeningTbvBank) getRekening(destination);
-        if (dest_account == null)
-        {
-            throw new NumberDoesntExistException("account " + destination
-                    + " unknown at " + name);
-        }
-        success = dest_account.muteer(money);
-
-        if (!success) // rollback
-        {
-            source_account.muteer(money);
-        }
+        boolean success = rek_account.muteer(money);
         
         bp.inform(this, "overgemaakt", null, money);
         return success;

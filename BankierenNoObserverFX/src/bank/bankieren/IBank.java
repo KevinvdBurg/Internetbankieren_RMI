@@ -40,9 +40,11 @@ public interface IBank extends RemotePublisher, Remote {
      * @throws NumberDoesntExistException
      *             als een van de twee bankrekeningnummers onbekend is
      */
-    boolean maakOver(int bron, int bestemming, Money bedrag)
+//    boolean maakOver(int bron, int bestemming, Money bedrag)
+//            throws NumberDoesntExistException, RemoteException;
+    
+    boolean maakOver(int reknr, Money bedrag)
             throws NumberDoesntExistException, RemoteException;
-
     /**
      * @param nr
      * @return de bankrekening met nummer nr mits bij deze bank bekend, anders null
